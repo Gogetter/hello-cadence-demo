@@ -30,3 +30,5 @@ curl --location --request POST 'http://localhost:8099/hello/execute/just-testing
        ![](https://github.com/Gogetter/hello-cadence-demo/blob/master/cadence_register_domain.png)
     * Start and execute a `hello` workflow using created `domainName` and a `taskName` a domain using execute url described above
        ![](https://github.com/Gogetter/hello-cadence-demo/blob/master/cadence_execute_workflow.png)
+       ![](https://github.com/Gogetter/hello-cadence-demo/blob/master/closed_workflow.png)
+       ![](https://github.com/Gogetter/hello-cadence-demo/blob/master/opened_workflow.png)
