@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.landregistry.hellocadencedemo.models.WorkflowExecutionResult;
 
+import static java.time.Duration.ofSeconds;
+
 @Slf4j
 @Service
 public class HelloWorkflowService {
@@ -23,7 +25,10 @@ public class HelloWorkflowService {
             WorkflowClient workflowClient = WorkflowClient.newInstance(domainName);
 
             // Get a workflow stub using the same task list the worker uses.
-            WorkflowOptions workflowOptions = new WorkflowOptions.Builder().setTaskList(taskListName).build();
+            WorkflowOptions workflowOptions = new WorkflowOptions.Builder()
+                .setTaskList(taskListName)
+                .setExecutionStartToCloseTimeout(ofSeconds(300))
+                .build();
             HelloWorkflow workflow = workflowClient.newWorkflowStub(HelloWorkflow.class, workflowOptions);
 
             // Start workflow asynchronously -> initiates the workflow execution and immediately returns to the caller

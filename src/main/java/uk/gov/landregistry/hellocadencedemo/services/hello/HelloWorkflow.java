@@ -3,6 +3,6 @@ package uk.gov.landregistry.hellocadencedemo.services.hello;
 import com.uber.cadence.workflow.WorkflowMethod;
 
 public interface HelloWorkflow {
-    @WorkflowMethod(executionStartToCloseTimeoutSeconds = 300)
+    @WorkflowMethod
     String getGreeting(String name);
 }
