@@ -1,5 +1,6 @@
 package uk.gov.landregistry.hellocadencedemo.services.hello;
 
+import com.uber.cadence.WorkflowExecution;
 import com.uber.cadence.client.WorkflowClient;
 import com.uber.cadence.client.WorkflowOptions;
 import com.uber.cadence.worker.Worker;
@@ -25,13 +26,19 @@ public class HelloWorkflowService {
             WorkflowOptions workflowOptions = new WorkflowOptions.Builder().setTaskList(taskListName).build();
             HelloWorkflow workflow = workflowClient.newWorkflowStub(HelloWorkflow.class, workflowOptions);
 
-            // Execute a workflow waiting for it to complete.
-            String greeting = workflow.getGreeting("World! We just testing");
-            log.debug("Greeting returned {}", greeting);
+            // Start workflow asynchronously -> initiates the workflow execution and immediately returns to the caller
+            // As opposed to synchronously -> workflow.getGreeting(greeting) which starts a workflow and waits for it to complete
+            WorkflowExecution workflowExecution =
+                WorkflowClient.start(workflow::getGreeting, "World! We just testing");
+
+            String executionResultMessage = String.format("Started process file workflow with workflowId=%s and runId=%s",
+                workflowExecution.getWorkflowId(), workflowExecution.getRunId());
+
+            log.debug("{}", executionResultMessage);
 
             return WorkflowExecutionResult.builder()
                 .failed(false)
-                .message(String.format("Greeting returned %s", greeting))
+                .message(executionResultMessage)
                 .build();
         } catch (Exception exc) {
             return WorkflowExecutionResult.builder()
