@@ -1,5 +1,5 @@
 # Pre-requisites
-* [common-dev-env](https://github.com/giuseppe-bertucci/common-dev-env) running with Cassandra and Cadence
+* [common-dev-env](https://github.com/LandRegistry/common-dev-env) running with Cassandra and Cadence
 * (Optional) Have Cadence Web UI running
 
 ### About demo project
