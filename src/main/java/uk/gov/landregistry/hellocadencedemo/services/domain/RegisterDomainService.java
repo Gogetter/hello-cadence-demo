@@ -7,27 +7,26 @@ import com.uber.cadence.RegisterDomainRequest;
 import com.uber.cadence.ServiceBusyError;
 import com.uber.cadence.serviceclient.IWorkflowService;
 import com.uber.cadence.serviceclient.WorkflowServiceTChannel;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.landregistry.hellocadencedemo.config.CadenceConfig;
 import uk.gov.landregistry.hellocadencedemo.models.Domain;
 import uk.gov.landregistry.hellocadencedemo.models.DomainRegistrationResult;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor(onConstructor = @__({@Autowired}))
 public class RegisterDomainService {
-    @Value("${cadence.demo.domain.name}")
-    private String defaultDomainName;
-
-    @Value("${cadence.demo.domain.description}")
-    private String defaultDomainDescription;
+    private final CadenceConfig cadenceConfig;
 
     public DomainRegistrationResult register(final Domain domain) {
         String message;
         Domain domainToUse = checkDomain(domain);
 
-        IWorkflowService cadenceService = new WorkflowServiceTChannel();
+        IWorkflowService cadenceService = new WorkflowServiceTChannel(cadenceConfig.getHost(), cadenceConfig.getPort());
         RegisterDomainRequest request = new RegisterDomainRequest();
         request.setDescription(domainToUse.description());
         request.setEmitMetric(true);
@@ -66,8 +65,8 @@ public class RegisterDomainService {
 
     private Domain checkDomain(final Domain domain) {
         return Domain.notEmpty(domain) ? domain : Domain.builder()
-            .name(defaultDomainName)
-            .description(defaultDomainDescription)
+            .name(cadenceConfig.getName())
+            .description(cadenceConfig.getDescription())
             .build();
     }
 
