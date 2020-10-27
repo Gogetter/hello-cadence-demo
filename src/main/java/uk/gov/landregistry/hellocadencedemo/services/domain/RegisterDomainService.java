@@ -26,7 +26,9 @@ public class RegisterDomainService {
         String message;
         Domain domainToUse = checkDomain(domain);
 
-        IWorkflowService cadenceService = new WorkflowServiceTChannel(cadenceConfig.getHost(), cadenceConfig.getPort());
+        IWorkflowService cadenceService = new WorkflowServiceTChannel(cadenceConfig.getHost(),
+            cadenceConfig.getPort());
+
         RegisterDomainRequest request = new RegisterDomainRequest();
         request.setDescription(domainToUse.description());
         request.setEmitMetric(true);
@@ -35,6 +37,7 @@ public class RegisterDomainService {
         int retentionPeriodInDays = 1;
 
         request.setWorkflowExecutionRetentionPeriodInDays(retentionPeriodInDays);
+
         try {
             cadenceService.RegisterDomain(request);
             message = String.format("Successfully registered domain %s with retention days %s",
